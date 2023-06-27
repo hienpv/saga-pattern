@@ -1,7 +1,7 @@
 package com.saga.choreography.service;
 
-import com.saga.choreography.dto.OrderDto;
+import com.saga.choreography.dto.OrderDTO;
 
 public interface OrderService {
-    OrderDto save(OrderDto orderDto);
+    OrderDTO save(OrderDTO orderDto);
 }

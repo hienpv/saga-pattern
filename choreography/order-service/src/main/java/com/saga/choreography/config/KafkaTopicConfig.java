@@ -1,6 +1,6 @@
 package com.saga.choreography.config;
 
-import com.saga.choreography.event.KafkaTopic;
+import com.saga.choreography.util.KafkaTopic;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic orderCreatedTopic() {
-        return TopicBuilder.name(KafkaTopic.CREATED_ORDER.getName())
+        return TopicBuilder.name(KafkaTopic.ORDER_EVENT.getCode())
                 .partitions(10)
                 .replicas(1)
                 .build();
