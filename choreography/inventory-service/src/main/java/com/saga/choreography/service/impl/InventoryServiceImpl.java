@@ -1,6 +1,5 @@
 package com.saga.choreography.service.impl;
 
-import com.saga.choreography.dto.EventDTO;
 import com.saga.choreography.dto.InventoryConsumptionDTO;
 import com.saga.choreography.dto.InventoryDTO;
 import com.saga.choreography.dto.OrderDTO;
@@ -31,7 +30,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Transactional
     public InventoryEvent newOrderInventory(OrderDTO orderDTO) {
         Optional<InventoryEntity> opInventory = inventoryRepository.findByProductId(orderDTO.getProductId());
-        if (opInventory.isPresent() && opInventory.get().getQuantity() - orderDTO.getQuantity() > 0) {
+        if (opInventory.isPresent() && opInventory.get().getQuantity() - orderDTO.getQuantity() >= 0) {
             InventoryEntity inventoryEntity = opInventory.get();
             inventoryEntity.setQuantity(inventoryEntity.getQuantity() - orderDTO.getQuantity());
             inventoryRepository.save(inventoryEntity);
