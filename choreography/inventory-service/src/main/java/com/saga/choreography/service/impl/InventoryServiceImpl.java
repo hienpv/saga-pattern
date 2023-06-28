@@ -1,12 +1,10 @@
 package com.saga.choreography.service.impl;
 
 import com.saga.choreography.dto.InventoryConsumptionDTO;
-import com.saga.choreography.dto.InventoryDTO;
 import com.saga.choreography.dto.OrderDTO;
 import com.saga.choreography.entity.InventoryConsumptionEntity;
 import com.saga.choreography.entity.InventoryEntity;
 import com.saga.choreography.entity.mapper.InventoryConsumptionMapper;
-import com.saga.choreography.entity.mapper.InventoryMapper;
 import com.saga.choreography.event.InventoryEvent;
 import com.saga.choreography.repository.InventoryConsumptionRepository;
 import com.saga.choreography.repository.InventoryRepository;

@@ -23,7 +23,7 @@ public class OrderEventHandler {
 
     private final KafkaPublisherService kafkaPublisherService;
 
-    @KafkaListener(topics = "order-event")
+    @KafkaListener(topics = "order-event", groupId = "order-event-group")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
         EventDTO eventDto = (EventDTO) consumerRecord.value();
         OrderEvent orderEvent = objectMapper.convertValue(eventDto.getPayload(), OrderEvent.class);

@@ -53,16 +53,16 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void cancelOrderPayment(OrderDTO orderDTO) {
-        Optional<UserBalanceEntity> opUb = userBalanceRepository.findByUserId(orderDTO.getUserId());
-        if (opUb.isPresent()) {
-            UserBalanceEntity userBalanceEntity = opUb.get();
-            Long totalBill = orderDTO.getQuantity() * orderDTO.getPrice();
-            userBalanceEntity.setBalance(userBalanceEntity.getBalance() + totalBill);
-            userBalanceRepository.save(userBalanceEntity);
-        }
-
         Optional<UserTransactionEntity> opUt = userTransactionRepository.findByOrderId(orderDTO.getUuid());
         if (opUt.isPresent()) {
+            Optional<UserBalanceEntity> opUb = userBalanceRepository.findByUserId(orderDTO.getUserId());
+            if (opUb.isPresent()) {
+                UserBalanceEntity userBalanceEntity = opUb.get();
+                Long totalBill = orderDTO.getQuantity() * orderDTO.getPrice();
+                userBalanceEntity.setBalance(userBalanceEntity.getBalance() + totalBill);
+                userBalanceRepository.save(userBalanceEntity);
+            }
+
             userTransactionRepository.deleteByOrderId(orderDTO.getUuid());
         }
     }
