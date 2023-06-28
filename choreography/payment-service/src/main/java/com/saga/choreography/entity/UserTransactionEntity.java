@@ -22,5 +22,5 @@ public class UserTransactionEntity extends BaseEntity {
     @Column(name = "user_id")
     String userId;
 
-    Long balance;
+    Long amount;
 }

@@ -2,7 +2,9 @@ package com.saga.choreography.util;
 
 public enum KafkaTopic {
     ORDER_EVENT("order-event", "Order event"),
-    INVENTORY_EVENT("inventory-event", "Inventory event");
+    INVENTORY_EVENT("inventory-event", "Inventory event"),
+
+    PAYMENT_EVENT("payment-event", "Payment event");
 
     private String code;
     private String name;

@@ -31,8 +31,10 @@ public class OrderEventHandler {
         if (OrderStatus.ORDER_CREATED.equals(orderEvent.getStatus())) {
             InventoryEvent inventoryEvent = inventoryService.newOrderInventory(orderEvent.getOrderDTO());
             kafkaPublisherService.raiseEvent(KafkaTopic.INVENTORY_EVENT.getCode(), inventoryEvent);
-        } else {
+        } else if (OrderStatus.ORDER_CANCELLED.equals(orderEvent.getStatus())) {
             inventoryService.cancelOrderInventory(orderEvent.getOrderDTO());
+        } else {
+            log.info("Process order complete");
         }
     }
 }

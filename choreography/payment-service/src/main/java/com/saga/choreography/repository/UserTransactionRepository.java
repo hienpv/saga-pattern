@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UserTransactionRepository extends JpaRepository<UserTransactionEntity, String> {
     Optional<UserTransactionEntity> findByOrderId(String orderId);
+
+    int deleteByOrderId(String orderId);
 }

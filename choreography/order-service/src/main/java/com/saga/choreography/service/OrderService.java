@@ -3,7 +3,7 @@ package com.saga.choreography.service;
 import com.saga.choreography.dto.OrderDTO;
 
 public interface OrderService {
-    OrderDTO save(OrderDTO orderDto);
+    OrderDTO createOrder(OrderDTO orderDto);
 
-    OrderDTO updateOrder(OrderDTO orderDTO);
+    void updateOrder(OrderDTO orderDTO);
 }

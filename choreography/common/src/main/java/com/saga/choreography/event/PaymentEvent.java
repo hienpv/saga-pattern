@@ -1,6 +1,6 @@
 package com.saga.choreography.event;
 
-import com.saga.choreography.util.InventoryStatus;
+import com.saga.choreography.util.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InventoryEvent {
-    private InventoryStatus status;
+public class PaymentEvent {
+    private PaymentStatus status;
     private String orderId;
 }

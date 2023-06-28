@@ -22,11 +22,11 @@ public class InventoryEventHandler {
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
         EventDTO eventDto = (EventDTO) consumerRecord.value();
         InventoryEvent inventoryEvent = objectMapper.convertValue(eventDto.getPayload(), InventoryEvent.class);
-        log.info("received payload='{}'", inventoryEvent.toString());
+        log.info("inventory-event : received payload='{}'", inventoryEvent.toString());
         OrderDTO orderDTO = OrderDTO.builder()
-                .uuid(inventoryEvent.getInventoryConsumptionDTO().getOrderId())
+                .uuid(inventoryEvent.getOrderId())
+                .inventoryStatus(inventoryEvent.getStatus())
                 .build();
-        orderDTO.setInventoryStatus(inventoryEvent.getStatus());
         orderService.updateOrder(orderDTO);
     }
 }

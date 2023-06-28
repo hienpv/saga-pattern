@@ -44,21 +44,12 @@ public class InventoryServiceImpl implements InventoryService {
             inventoryConsumptionRepository.save(InventoryConsumptionMapper.INSTANCE.toEntity(inventoryConsumptionDTO));
             return InventoryEvent.builder()
                     .status(InventoryStatus.RESERVED)
-                    .inventoryDTO(InventoryMapper.INSTANCE.toDto(inventoryEntity))
-                    .inventoryConsumptionDTO(inventoryConsumptionDTO)
+                    .orderId(orderDTO.getUuid())
                     .build();
         } else {
             return InventoryEvent.builder()
                     .status(InventoryStatus.REJECTED)
-                    .inventoryDTO(InventoryDTO.builder()
-                            .productId(orderDTO.getProductId())
-                            .quantity(0L)
-                            .build())
-                    .inventoryConsumptionDTO(InventoryConsumptionDTO.builder()
-                            .orderId(orderDTO.getUuid())
-                            .productId(orderDTO.getProductId())
-                            .quantity(orderDTO.getQuantity())
-                            .build())
+                    .orderId(orderDTO.getUuid())
                     .build();
         }
     }

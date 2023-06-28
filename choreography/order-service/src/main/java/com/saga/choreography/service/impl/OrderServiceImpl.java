@@ -22,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final KafkaPublisherService kafkaPublisherService;
 
     @Override
-    public OrderDTO save(OrderDTO orderDto) {
+    public OrderDTO createOrder(OrderDTO orderDto) {
         if (orderDto.getOrderStatus() == null) {
             orderDto.setOrderStatus(OrderStatus.ORDER_CREATED);
         }
@@ -41,20 +41,39 @@ public class OrderServiceImpl implements OrderService {
                 .status(OrderStatus.ORDER_CREATED)
                 .orderDTO(OrderMapper.INSTANCE.toDto(orderEntity))
                 .build();
-        kafkaPublisherService.raiseEvent(KafkaTopic.ORDER_EVENT.getCode(), orderEvent);
 
+        kafkaPublisherService.raiseEvent(KafkaTopic.ORDER_EVENT.getCode(), orderEvent);
         return OrderMapper.INSTANCE.toDto(orderEntity);
     }
 
     @Override
-    public OrderDTO updateOrder(OrderDTO orderDTO) {
-        orderRepository.findById(orderDTO.getUuid()).ifPresent(x -> {
-            x.setInventoryStatus(orderDTO.getInventoryStatus());
-            if (InventoryStatus.REJECTED.equals(orderDTO.getInventoryStatus())) {
-                x.setOrderStatus(OrderStatus.ORDER_CANCELLED);
+    public void updateOrder(OrderDTO orderDTO) {
+        orderRepository.findById(orderDTO.getUuid()).ifPresent(entity -> {
+            if (orderDTO.getInventoryStatus() != null) {
+                entity.setInventoryStatus(orderDTO.getInventoryStatus());
+                if (InventoryStatus.REJECTED.equals(orderDTO.getInventoryStatus())) {
+                    entity.setOrderStatus(OrderStatus.ORDER_CANCELLED);
+                }
             }
-            orderRepository.save(x);
+
+            if (orderDTO.getPaymentStatus() != null) {
+                entity.setPaymentStatus(orderDTO.getPaymentStatus());
+                if (PaymentStatus.REJECTED.equals(orderDTO.getPaymentStatus())) {
+                    entity.setOrderStatus(OrderStatus.ORDER_CANCELLED);
+                }
+            }
+
+            if (PaymentStatus.RESERVED.equals(entity.getPaymentStatus())
+                    && InventoryStatus.RESERVED.equals(entity.getInventoryStatus())) {
+                entity.setOrderStatus(OrderStatus.ORDER_COMPLETED);
+            }
+            orderRepository.save(entity);
+
+            OrderEvent orderEvent = OrderEvent.builder()
+                    .status(entity.getOrderStatus())
+                    .orderDTO(OrderMapper.INSTANCE.toDto(entity))
+                    .build();
+            kafkaPublisherService.raiseEvent(KafkaTopic.ORDER_EVENT.getCode(), orderEvent);
         });
-        return orderDTO;
     }
 }
